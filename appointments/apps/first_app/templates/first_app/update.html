@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Update Appointment</title>
+  </head>
+  <body>
+    <a href="/success">Dashboard</a>&nbsp;&nbsp;<a href="/logout">Log Out</a><br><br>
+    <form action="/update/{{appointment.id}}/{{request.session.id}}" method="post">
+      {% csrf_token %}
+      Task: <input type="text" name="new_task" value="{{appointment.task}}"><br>
+      Status: <select name="new_status">
+        {% if appointment.status == "Pending" %}
+          <option value="Pending">Pending</option>
+          <option value="Done">Done</option>
+          <option value="Missed">Missed</option>
+        {% else %}
+          <option value="Missed">Missed</option>
+          <option value="Done">Done</option>
+          <option value="Pending">Pending</option>
+        {% endif %}
+      </select><br>
+      Date: <input type="date" name="new_date" value="{{appointment.date}}"><br>
+      Time: <input type="time" name="new_time" value="{{appointment.time}}"><br><br>
+      <input type="submit" name="" value="Update">
+    </form>
+
+    {% if messages %}
+    <ul class="messages">
+      {% for message in messages %}
+      <li{% if message.tags %} class="{{ message.tags}}" {% endif %}>{{ message }}
+    </li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+
+  </body>
+</html>

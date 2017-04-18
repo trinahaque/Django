@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body>
+    <a href="/logout">Log Out</a>
+    <p>Hello, {{ request.session.first_name }}!</p>
+
+
+    <p>Here are your appointments for today, {{request.session.today}}</p>
+    <table border="2">
+      <tr>
+        <th>Task</th>
+        <th>Time</th>
+        <th>Status</th>
+        <th>Action</th>
+      </tr>
+      <tr {% for appointment in appointments %}>
+        <td>{{appointment.task}}</td>
+        <td>{{appointment.time}}</td>
+        <td>{{appointment.status}}</td>
+        {% if appointment.status != "Done" %}
+          <td><a href="/edit/{{appointment.id}}/{{request.session.id}}">Edit</a>&nbsp;&nbsp;<a href="/delete/{{appointment.id}}/{{request.session.id}}">Delete</a></td>
+        {% endif %}
+      </tr {% endfor %}>
+    </table><br>
+
+
+    <h4>Your Other Appointments</h2>
+    <table border="2">
+      <tr>
+        <th>Task</th>
+        <th>Date</th>
+        <th>Time</th>
+      </tr>
+      <tr {% for other in other_appointments %}>
+        <td>{{other.task}}</td>
+        <td>{{other.date}}</td>
+        <td>{{other.time}}</td>
+      </tr {% endfor %}>
+    </table><br>
+
+
+    <h4>Add Appointment</h3>
+    <form action="/add/{{request.session.id}}" method="POST">
+      {% csrf_token %}
+      Date: <input type="date" name="date" value="">
+      Time: <input type="time" name="time" value="">
+      Tasks: <input type="text" name="task" value="">
+      <input type="submit" name="" value="Add">
+    </form>
+
+
+    {% if messages %}
+    <ul class="messages">
+      {% for message in messages %}
+      <li{% if message.tags %} class="{{ message.tags}}" {% endif %}>{{ message }}
+    </li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+
+  </body>
+</html>
