@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body>
+    <p>Welcome, {{ request.session.first_name }}!</p>
+
+    <form action='/quotes/{{ request.session.id }}' method='POST'>
+      {% csrf_token %}
+      <h3>Contribute a Quote</h3>
+      Quoted_By: <input type="text" name='quote_by'><br>
+      Message: <input type="text" name='quote'><br><br>
+       <input type="submit" value='Submit'><br><br>
+     </form>
+
+     {% if messages %}
+     <ul class="messages">
+       {% for message in messages %}
+       <li{% if message.tags %} class="{{ message.tags}}" {% endif %}>{{ message }}
+     </li>
+       {% endfor %}
+     </ul>
+     {% endif %}
+
+     <h2> Quotable Quotes </h2>
+     {% for quote in quotes %}
+       <p> {{ quote.quote_by }} said "{{ quote.quote }}"</p>
+       Posted by: <a href="/users/{{quote.user.id}}" >{{ quote.user.first_name }}</a><br>
+       <form action='/favorite/{{request.session.id}}/{{quote.id}}' method='POST'>
+         {% csrf_token %}
+          <input type="submit" value='Add to my list'><br><br>
+       </form>
+     {% endfor %}
+
+     <h2>My Favorites </h2>
+     {% for favorite in favorites %}
+       <p> {{ favorite.quote.quote_by }} said "{{ favorite.quote.quote }}"</p>
+       <p> Posted_by: {{ favorite.quote.user.first_name }} </p>
+       <form action='/remove/{{request.session.id}}/{{favorite.quote.id}}' method='POST'>
+         {% csrf_token %}
+          <input type="submit" value='Remove'><br><br>
+       </form>
+     {% endfor %}
+
+
+    <form action='/logout' method='POST'>
+      {% csrf_token %}
+       <input type="submit" value='Log Out'>
+     </form>
+  </body>
+</html>
