@@ -1,40 +1,41 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from .models import User, Trip
+from .models import User, Author, Book, Review
 
 
 def index(request):
     if 'first_name' in request.session:
-        return redirect('/success')
+        return redirect('/books')
     return render(request, "first_app/index.html")
 
-def success(request):
+def books(request):
     if 'first_name' in request.session:
-        user = User.objects.get(id=request.session['id'])
-        user_trips = Trip.objects.filter(creator=user).filter(joiner=user)
-        # print "destination", user_trips[0].destination
-        context = {
-            "user_trips": user_trips
-        }
-        return render(request, "first_app/success.html", context)
+        return render(request, "first_app/success.html")
     return redirect('/')
 
 def add(request):
-    if "first_name" in request.session:
-        return render(request, "first_app/add.html")
-    return redirect("/")
-
-def create_trip(request):
-    if "first_name" in request.session:
-        trip = Trip.objects.create_trip(request.POST, request.session['id'])
-        if trip[0] == False:
-            for error in trip[1]:
-                messages.add_message(request, messages.INFO, error)
-                return redirect("add")
-        else:
-            return redirect('/success')
+    if 'first_name' in request.session:
+        authors = Author.objects.all()
+        context = {
+            'authors': authors
+        }
+        return render(request, "first_app/add.html", context)
     return redirect('/')
 
+def add_book(request):
+    if 'first_name' in request.session:
+        review = Review.objects.validate_book(request.POST, request.session['id'])
+
+        if review[0]:
+            context = {
+                "review": review[1]
+            }
+            return render(request, "first_app/review.html", context)
+        else:
+            for error in review[1]:
+                messages.add_message(request, messages.INFO, error)
+                return redirect('add')
+    return redirect('/')
 
 def registration(request):
     if request.method == "POST":
@@ -56,7 +57,7 @@ def login(request):
         else:
             request.session['first_name']= result[1].first_name
             request.session['id'] = result[1].id
-            return redirect('/success')
+            return redirect('/books')
     return redirect("/")
 
 

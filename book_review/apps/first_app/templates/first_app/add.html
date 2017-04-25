@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Add Book and Review</title>
+  </head>
+  <body>
+    <p><a href="/logout">Log Out</a>&nbsp;&nbsp;<a href="/books">Home</a></p>
+
+    <h2>Add a New Book Title and a Review</h2>
+
+    <form action="/add_book" method="post">
+      {% csrf_token %}
+      <p>Title: <input type="text" name="title"></p>
+      <p>Author:
+        <p>Choose from the list:
+          <select>
+            {% for author in authors %}
+              <option value="author">{{author.author}}</option>
+            {% endfor %}
+          </select></p>
+        <p>Or add a new author: <input type="text" name="new_author"></p>
+      <p>Review: <input type="text" name="review"></p>
+      <p>Rating:
+        <select name="rating">
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+        </select></p>
+      <p><input type="submit" value="Add Book and Review">
+    </form>
+
+    {% if messages %}
+    <ul class="messages">
+      {% for message in messages %}
+      <li{% if message.tags %} class="{{ message.tags}}" {% endif %}>{{ message }}
+    </li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+
+  </body>
+</html>

@@ -18,7 +18,7 @@ class UserManager(models.Manager):
         errors = []
 
         valid = True
-        if len(email) < 1 or len(first_name) < 1 or len(last_name) < 1 or len(password) < 1 or len(confirm_password)< 1 or len(bday)<1:
+        if len(email) < 1 or len(first_name) < 1 or len(last_name) < 1 or len(password) < 1 or len(confirm_password)< 1 or len(bday) <1:
             errors.append("A field can not be empty")
             valid = False
         else:
@@ -40,7 +40,6 @@ class UserManager(models.Manager):
             elif password != confirm_password:
                 errors.append("Password and confirm password needs to match")
                 valid = False
-            #birthday validation
             if bday == unicode(datetime.today().date()) or bday > unicode(datetime.today().date()):
                 errors.append('Birthday needs to be in past')
                 valid = False
@@ -52,6 +51,7 @@ class UserManager(models.Manager):
                 user = User.objects.create(first_name=first_name, last_name=last_name, email=email, password=pw_hash)
                 return (True, user)
             else:
+                # valid_messages.append("Email already exists")
                 errors.append("Email already exists")
 
         return (False, errors)
@@ -86,6 +86,48 @@ class UserManager(models.Manager):
         return False, login_messages
 
 
+class BookManager(models.Manager):
+
+    def validate_book(self, POST, id):
+
+        if 'author' in POST:
+            author = POST['author']
+        else:
+            author = False
+        new_author = POST.get('new_author', False)
+
+        if not new_author:
+            author_name = author
+        else:
+            author_name = new_author
+
+        print author_name
+
+        title = POST['title']
+        review = POST['review']
+        rating = POST['rating']
+        errors = []
+
+        valid = True
+        if len(title) < 1 or len(review) < 1 or len(rating) < 1 or len(author_name) < 1:
+            errors.append("A field can not be empty")
+            valid = False
+
+        if valid:
+            user = User.objects.get(id=id)
+            authors = Author.objects.all()
+            for author in authors:
+                if author.author == author_name:
+                    author = author
+                    break
+                else:
+                    author = Author.objects.create(author=author)
+            book = Book.objects.create(user=user, title=title, author=author)
+            new_review = Review.objects.create(user=user, book=book, review=review, rating=rating)
+            return (True, new_review)
+        return (False, errors)
+
+
 class User(models.Model):
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
@@ -96,17 +138,27 @@ class User(models.Model):
     objects = UserManager()
 
 
-class Quote(models.Model):
-    user = models.ForeignKey(User)
-    quote_by = models.CharField(max_length=255)
-    quote = models.TextField(max_length=1000)
+class Author(models.Model):
+    author = models.CharField(max_length=255, default="None")
     created_at = models.DateTimeField(auto_now_add = True)
     updated_at = models.DateTimeField(auto_now=True)
 
+class Book(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    title = models.CharField(max_length=255)
+    author = models.ForeignKey(Author, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add = True)
+    updated_at = models.DateTimeField(auto_now=True)
+    # An author can write many books
+    # A user can add many books
 
-
-class Favorite(models.Model):
-    user = models.ForeignKey(User)
-    quote = models.ForeignKey(Quote)
-    # created_at = models.DateTimeField(auto_now_add = True)
-    # updated_at = models.DateTimeField(auto_now=True)
+class Review(models.Model):
+    user = models.ForeignKey(User,on_delete=models.CASCADE)
+    book = models.ForeignKey(Book,on_delete=models.CASCADE)
+    review = models.TextField(max_length=1000)
+    rating = models.IntegerField()
+    created_at = models.DateTimeField(auto_now_add = True)
+    updated_at = models.DateTimeField(auto_now=True)
+    objects = BookManager()
+    # A user can write multiple reviews
+    # A book can have multiple reviews

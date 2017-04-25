@@ -123,7 +123,7 @@ class User(models.Model):
 
 class Trip(models.Model):
     creator = models.ForeignKey(User, on_delete = models.CASCADE, related_name= "creator")
-    joiner = models.ManyToManyField(User, related_name="joiner", default=None)
+    joiner = models.ManyToManyField(User, related_name="joiner")
     destination = models.CharField(max_length=255)
     description = models.TextField()
     from_date = models.CharField(max_length=255)
