@@ -10,9 +10,11 @@ def index(request):
 
 def books(request):
     if 'first_name' in request.session:
-        books = Book.objects.all()
-        print "books", books
-        return render(request, "first_app/success.html")
+        reviews = Review.objects.all()
+        context = {
+            "reviews": reviews
+        }
+        return render(request, "first_app/success.html", context)
     return redirect('/')
 
 def add(request):
@@ -43,7 +45,6 @@ def users(request, id):
     if request.method == "POST":
         user = User.objects.get(id=id)
         books = Book.objects.filter(user=user)
-        print books
         context = {
             "user": user,
             "books": books

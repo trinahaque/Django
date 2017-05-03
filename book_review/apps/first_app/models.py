@@ -90,6 +90,10 @@ class BookManager(models.Manager):
 
     def validate_book(self, POST, id):
 
+        title = POST['title'].lower()
+        review = POST['review'].lower()
+        rating = POST['rating'].lower()
+        errors = []
         author = POST.get('author', False)
         new_author = POST.get('new_author', False)
 
@@ -102,11 +106,6 @@ class BookManager(models.Manager):
             else:
                 author_object = author_valid[0]
 
-        title = POST['title'].lower()
-        review = POST['review'].lower()
-        rating = POST['rating'].lower()
-        errors = []
-
         valid = True
         if len(title) < 1 or len(review) < 1 or len(rating) < 1:
             errors.append("A field can not be empty")
@@ -114,9 +113,14 @@ class BookManager(models.Manager):
 
         if valid:
             user = User.objects.get(id=id)
-            book = Book.objects.create(user=user, title=title, author=author_object)
-            review = Review.objects.create(user=user, book=book, review=review, rating=rating)
-            return (True, review)
+            book_object = Book.objects.filter(title=title)
+            if len(book_object) < 1:
+                book = Book.objects.create(user=user, title=title, author=author_object)
+                review = Review.objects.create(user=user, book=book, review=review, rating=rating)
+                return (True, review)
+            else:
+                errors.append("Book already exists")
+
         return (False, errors)
 
     def new_review(self, POST, id, bid):

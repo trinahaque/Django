@@ -7,7 +7,7 @@
   <body>
     <p><a href="/logout">Log Out</a>&nbsp;&nbsp;<a href="/books">Home</a></p>
     <p>{{review.book.title|title}}</p>
-    <p>Author: {{review.book.author.author|title}}</p><br>
+    <p>Author: {{review.book.author.author|title}}</p>
     <h2>Review</h2>
     <p>Ratings: {{review.rating }}</p>
     <p><a href="/users/{{review.user.id}}">{{review.user.first_name}}</a> said {{review.review|title}}</p>
