@@ -10,6 +10,8 @@ def index(request):
 
 def books(request):
     if 'first_name' in request.session:
+        books = Book.objects.all()
+        print "books", books
         return render(request, "first_app/success.html")
     return redirect('/')
 
@@ -25,7 +27,6 @@ def add(request):
 def add_book(request):
     if 'first_name' in request.session:
         review = Review.objects.validate_book(request.POST, request.session['id'])
-
         if review[0]:
             context = {
                 "review": review[1]
@@ -36,6 +37,19 @@ def add_book(request):
                 messages.add_message(request, messages.INFO, error)
                 return redirect('add')
     return redirect('/')
+
+
+def users(request, id):
+    if request.method == "POST":
+        user = User.objects.get(id=id)
+        books = Book.objects.filter(user=user)
+        print books
+        context = {
+            "user": user,
+            "books": books
+        }
+        return render(request, "first_app/users.html", context)
+    return redirect("/")
 
 def registration(request):
     if request.method == "POST":

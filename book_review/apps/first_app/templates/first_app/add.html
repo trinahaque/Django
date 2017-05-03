@@ -14,9 +14,9 @@
       <p>Title: <input type="text" name="title"></p>
       <p>Author:
         <p>Choose from the list:
-          <select>
+          <select value="author" name="author">
             {% for author in authors %}
-              <option value="author">{{author.author}}</option>
+              <option value="{{author.author}}">{{author.author|title}}</option>
             {% endfor %}
           </select></p>
         <p>Or add a new author: <input type="text" name="new_author"></p>

@@ -90,41 +90,33 @@ class BookManager(models.Manager):
 
     def validate_book(self, POST, id):
 
-        if 'author' in POST:
-            author = POST['author']
-        else:
-            author = False
+        author = POST.get('author', False)
         new_author = POST.get('new_author', False)
 
         if not new_author:
-            author_name = author
+            author_object = Author.objects.get(author=author.lower())
         else:
-            author_name = new_author
+            author_valid = Author.objects.filter(author=new_author.lower())
+            if len(author_valid) < 1:
+                author_object = Author.objects.create(author=new_author.lower())
+            else:
+                author_object = author_valid[0]
 
-        print author_name
-
-        title = POST['title']
-        review = POST['review']
-        rating = POST['rating']
+        title = POST['title'].lower()
+        review = POST['review'].lower()
+        rating = POST['rating'].lower()
         errors = []
 
         valid = True
-        if len(title) < 1 or len(review) < 1 or len(rating) < 1 or len(author_name) < 1:
+        if len(title) < 1 or len(review) < 1 or len(rating) < 1:
             errors.append("A field can not be empty")
             valid = False
 
         if valid:
             user = User.objects.get(id=id)
-            authors = Author.objects.all()
-            for author in authors:
-                if author.author == author_name:
-                    author = author
-                    break
-                else:
-                    author = Author.objects.create(author=author)
-            book = Book.objects.create(user=user, title=title, author=author)
-            new_review = Review.objects.create(user=user, book=book, review=review, rating=rating)
-            return (True, new_review)
+            book = Book.objects.create(user=user, title=title, author=author_object)
+            review = Review.objects.create(user=user, book=book, review=review, rating=rating)
+            return (True, review)
         return (False, errors)
 
 
