@@ -11,6 +11,18 @@
     <h2>Review</h2>
     <p>Ratings: {{review.rating }}</p>
     <p><a href="/users/{{review.user.id}}">{{review.user.first_name}}</a> said {{review.review|title}}</p>
-    <p>Posted on: {{review.created_at}}</p>
+    <p>Posted on: {{review.created_at}}</p><br><br>
+
+    <h2>Add a review</h2>
+    <form action="/add_review/{{request.session.id}}/{{review.book.id}}" method="post">
+      <input type="text" name="new_review" value="">
+      <select name="new_rating">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+      </select></p>
+    </form>
   </body>
 </html>

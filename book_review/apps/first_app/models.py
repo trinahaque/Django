@@ -119,6 +119,20 @@ class BookManager(models.Manager):
             return (True, review)
         return (False, errors)
 
+    def new_review(self, POST, id, bid):
+        new_review = POST['new_review']
+        new_rating = POST['new_rating']
+        errors = []
+
+        if len(new_review) > 0 or len(new_rating) > 0:
+            user = User.objects.get(id=id)
+            book = Book.objects.get(id=bid)
+            review = Review.objects.create(user=user, book=book)
+            return (True, review)
+        else:
+            errors.append("A field is empty")
+        return (False, errors)
+
 
 class User(models.Model):
     first_name = models.CharField(max_length=255)

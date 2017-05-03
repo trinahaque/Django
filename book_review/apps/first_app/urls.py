@@ -9,5 +9,6 @@ urlpatterns = [
     url(r'^books$', views.books),
     url(r'^books/add$', views.add, name='add'),
     url(r'^add_book$', views.add_book),
-    url(r'^users/(?P<id>\d+)$', views.users)
+    url(r'^users/(?P<id>\d+)$', views.users),
+    url(r'^add_review/(?P<id>\d+)/(?P<bid>\d+)$', views.review)
 ]

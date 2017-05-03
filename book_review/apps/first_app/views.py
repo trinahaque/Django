@@ -51,6 +51,11 @@ def users(request, id):
         return render(request, "first_app/users.html", context)
     return redirect("/")
 
+def review(request, id, bid):
+    if request.method == "POST":
+        review = Review.objects.new_review(POST, id, bid)
+    return redirect("/")
+
 def registration(request):
     if request.method == "POST":
         result = User.objects.registration(request)
