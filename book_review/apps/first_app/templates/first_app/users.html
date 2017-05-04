@@ -5,6 +5,13 @@
     <title>User Reviews</title>
   </head>
   <body>
+    <p><a href="/logout">Log Out</a>&nbsp;&nbsp;<a href="/books">Home</a></p>
     <p>User Alias: {{user.first_name}} {{user.last_name}}</p>
+    <p>Email: {{user.email}}</p>
+    <p>Total Reviews: {{count}}</p>
+    <h4>Other reviews:</h4>
+    {% for review in reviews %}
+      <p><a href="/books/{{review.book.id}}">{{review.book.title|title}}</a></p>
+    {% endfor %}
   </body>
 </html>

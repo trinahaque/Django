@@ -42,12 +42,17 @@ def add_book(request):
 
 
 def users(request, id):
-    if request.method == "POST":
+    if 'first_name' in request.session:
         user = User.objects.get(id=id)
         books = Book.objects.filter(user=user)
+        reviews = Review.objects.filter(user=user)
+        count = len(reviews)
+        print count
         context = {
             "user": user,
-            "books": books
+            "books": books,
+            "count": count,
+            "reviews": reviews
         }
         return render(request, "first_app/users.html", context)
     return redirect("/")
