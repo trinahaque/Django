@@ -6,15 +6,19 @@
   </head>
   <body>
     <p><a href="/logout">Log Out</a>&nbsp;&nbsp;<a href="/books">Home</a></p>
-    <p>{{review.book.title|title}}</p>
-    <p>Author: {{review.book.author.author|title}}</p>
+    <p>{{book.title|title}}</p>
+    <p>Author: {{book.author.author|title}}</p>
     <h2>Review</h2>
-    <p>Ratings: {{review.rating }}</p>
-    <p><a href="/users/{{review.user.id}}">{{review.user.first_name}}</a> said {{review.review|title}}</p>
-    <p>Posted on: {{review.created_at}}</p><br><br>
+    {% for review in reviews %}
+      <p>Ratings: {{review.rating }}</p>
+      <p><a href="/users/{{review.user.id}}">{{review.user.first_name}}</a> said {{review.review|title}}</p>
+      <p>Posted on: {{review.created_at}}</p>
+    {% endfor %}
 
     <h2>Add a review</h2>
-    <form action="/add_review/{{request.session.id}}/{{review.book.id}}" method="post">
+
+    <form action="/add_review/{{request.session.id}}/{{book.id}}" method="post">
+      {% csrf_token %}
       <input type="text" name="new_review" value="">
       <select name="new_rating">
         <option value="1">1</option>
@@ -23,6 +27,7 @@
         <option value="4">4</option>
         <option value="5">5</option>
       </select></p>
+      <input type="submit" name="" value="Add Review">
     </form>
   </body>
 </html>

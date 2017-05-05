@@ -33,13 +33,24 @@ def add_book(request):
             context = {
                 "review": review[1]
             }
-            return render(request, "first_app/review.html", context)
+            return redirect('books', id=review[1].book.id)
         else:
             for error in review[1]:
                 messages.add_message(request, messages.INFO, error)
                 return redirect('add')
     return redirect('/')
 
+def book(request, bid):
+    if 'first_name' in request.session:
+        book = Book.objects.get(id=bid)
+        reviews = Review.objects.filter(book=book)
+        context = {
+            "book": book,
+            "reviews": reviews
+        }
+        # print reviews
+        return render(request, "first_app/review.html", context)
+    return redirect('/')
 
 def users(request, id):
     if 'first_name' in request.session:
@@ -59,7 +70,11 @@ def users(request, id):
 
 def review(request, id, bid):
     if request.method == "POST":
-        review = Review.objects.new_review(POST, id, bid)
+        review = Review.objects.new_review(request.POST, id, bid)
+        if review[0] == False:
+            for error in review[1]:
+                messages.add_message(request, messages.INFO, error)
+        return redirect("book")
     return redirect("/")
 
 def registration(request):

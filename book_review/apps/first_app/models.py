@@ -128,7 +128,7 @@ class BookManager(models.Manager):
         new_rating = POST['new_rating']
         errors = []
 
-        if len(new_review) > 0 or len(new_rating) > 0:
+        if len(new_review) > 0 and len(new_rating) > 0:
             user = User.objects.get(id=id)
             book = Book.objects.get(id=bid)
             review = Review.objects.create(user=user, book=book)
