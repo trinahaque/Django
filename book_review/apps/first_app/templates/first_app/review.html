@@ -13,6 +13,10 @@
       <p>Ratings: {{review.rating }}</p>
       <p><a href="/users/{{review.user.id}}">{{review.user.first_name}}</a> said {{review.review|title}}</p>
       <p>Posted on: {{review.created_at}}</p>
+      {% if review.user.id == request.session.id %}
+        <p><a href="/delete/{{review.id}}/{{review.book.id}}">Delete</a></p>
+      {% endif %}
+      ---------------------------------------
     {% endfor %}
 
     <h2>Add a review</h2>

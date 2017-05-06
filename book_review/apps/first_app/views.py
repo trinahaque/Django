@@ -10,9 +10,12 @@ def index(request):
 
 def books(request):
     if 'first_name' in request.session:
-        reviews = Review.objects.all()
+        reviews_last_three = Review.objects.all().order_by('-id')[:3][::-1]
+        # other_reviews = Review.objects.all().exclude(id__in=reviews_last_three)
+        # need to figure out the exclude part
+
         context = {
-            "reviews": reviews
+            "reviews": reviews_last_three
         }
         return render(request, "first_app/success.html", context)
     return redirect('/')
@@ -33,7 +36,7 @@ def add_book(request):
             context = {
                 "review": review[1]
             }
-            return redirect('books', id=review[1].book.id)
+            return redirect('books', bid=review[1].book.id)
         else:
             for error in review[1]:
                 messages.add_message(request, messages.INFO, error)
@@ -68,14 +71,25 @@ def users(request, id):
         return render(request, "first_app/users.html", context)
     return redirect("/")
 
+
 def review(request, id, bid):
     if request.method == "POST":
         review = Review.objects.new_review(request.POST, id, bid)
         if review[0] == False:
             for error in review[1]:
                 messages.add_message(request, messages.INFO, error)
-        return redirect("book")
+        return redirect("books", bid=bid)
     return redirect("/")
+
+
+def delete(request, rid, bid):
+    if "first_name" in request.session:
+        # book = Book.objects.get(id=bid)
+        # user = User.objects.get(id=request.session['id'])
+        Review.objects.review_delete(rid)
+        return redirect("books", bid=bid)
+    return redirect("/")
+
 
 def registration(request):
     if request.method == "POST":

@@ -131,11 +131,15 @@ class BookManager(models.Manager):
         if len(new_review) > 0 and len(new_rating) > 0:
             user = User.objects.get(id=id)
             book = Book.objects.get(id=bid)
-            review = Review.objects.create(user=user, book=book)
+            review = Review.objects.create(user=user, book=book, review=new_review, rating=new_rating)
             return (True, review)
         else:
             errors.append("A field is empty")
         return (False, errors)
+
+    def review_delete(self, rid):
+        review = Review.objects.get(id=rid)
+        review.delete()
 
 
 class User(models.Model):

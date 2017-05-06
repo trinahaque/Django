@@ -11,5 +11,6 @@ urlpatterns = [
     url(r'^add_book$', views.add_book),
     url(r'^books/(?P<bid>\d+)$', views.book, name='books'),
     url(r'^users/(?P<id>\d+)$', views.users),
-    url(r'^add_review/(?P<id>\d+)/(?P<bid>\d+)$', views.review)
+    url(r'^add_review/(?P<id>\d+)/(?P<bid>\d+)$', views.review),
+    url(r'^delete/(?P<rid>\d+)/(?P<bid>\d+)$', views.delete)
 ]
