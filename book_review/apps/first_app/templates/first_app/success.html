@@ -17,5 +17,11 @@
           -----------------------------------------
       </div>
     {% endfor %}
+    <div>
+      <h3>Other books</h3>
+      {% for review in other_reviews %}
+        <p><a href="/books/{{review.book.id}}">{{review.book.title|title}}</a></p>
+      {% endfor %}
+    </div>
   </body>
 </html>

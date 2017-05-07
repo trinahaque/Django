@@ -11,11 +11,12 @@ def index(request):
 def books(request):
     if 'first_name' in request.session:
         reviews_last_three = Review.objects.all().order_by('-id')[:3][::-1]
-        # other_reviews = Review.objects.all().exclude(id__in=reviews_last_three)
-        # need to figure out the exclude part
+        other_reviews = Review.objects.all().exclude(id__in=[review.id for review in reviews_last_three])
+        # this gets all the reviews except for the last three reviews
 
         context = {
-            "reviews": reviews_last_three
+            "reviews": reviews_last_three,
+            "other_reviews": other_reviews
         }
         return render(request, "first_app/success.html", context)
     return redirect('/')
