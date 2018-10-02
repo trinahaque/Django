@@ -3,14 +3,14 @@ Python, Django, Web Development, HTML
 
 1) Create a virtual environment in virtual environment folder and install Django. Instruction is below:
 
-###For Mac: 
+For Mac: 
 ```
 a) virtualenv djangoEnv
 b) source djangoEnv/bin/activate
 c) (djangoEnv)>pip install Django==1.10
 ```
 
-###For PC: 
+For PC: 
 ```
 a) python -m virtualenv djangoEnv
 b) call djangoEnv/scripts/activate
