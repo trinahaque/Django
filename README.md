@@ -18,9 +18,19 @@ c) (djangoEnv)>pip install django
 ```
 
 2) Navigate to virtual environment folder and activate the environment
-  > source djangoEnv/bin/activate
-  
-3) Navigate to project folder and type 
-  > python2.7 manage.py runserver
+  ```
+  source djangoEnv/bin/activate
+  ```
+3) Navigate to project folder 
 
-4) Open up browser and type localhost:8000
+4) Install bcrypt by typing the command below:
+```
+pip install bcrypt
+```
+
+5) Type the command below to run the project:
+```
+python2.7 manage.py runserver
+```
+
+6) Open up browser and type localhost:8000
